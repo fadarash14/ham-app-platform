@@ -2,26 +2,38 @@ import { TextareaField } from "@/components/login/TextareaField";
 import { TextField } from "@/components/login/TextField";
 import ListBoxSelect from "@/components/ui-kit/select-box/ListBoxSelect";
 import { useState } from "react";
-import ImagesInCategory from "../../../components/product/category/ImagesInCategory";
 import MySwitch from "@/components/ui-kit/MySwitch";
+import ImageUploaderProduct from "./ImageUploaderProduct";
 
-const AddProductComp = () => {
+type ProductState = {
+  name: string;
+  price: string;
+  discountPercentage: string;
+  discountAmount: string;
+  length: string;
+  width: string;
+  height: string;
+  weight: string;
+  description: string;
+  isActive: boolean;
+};
+
+interface IProps {
+  productState: ProductState;
+  setProductState: React.Dispatch<React.SetStateAction<ProductState>>;
+  setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
+  selectedImages: File[];
+}
+
+const AddProductComp = ({
+  productState,
+  setProductState,
+  setSelectedImages,
+  selectedImages,
+}: IProps) => {
   const [selectedCategory, setSelectedCategory] =
     useState<SelectedOption | null>(null);
   const [selectedTags, setSelectedTags] = useState<SelectedOption | null>(null);
-  const [productState, setProductState] = useState({
-    name: "",
-    price: "",
-    discountPercentage: "",
-    discountAmount: "",
-    length: "",
-    width: "",
-    height: "",
-    weight: "",
-    description: "",
-    isActive: false,
-  });
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -171,13 +183,10 @@ const AddProductComp = () => {
           />
         </div>
         <div className="mb-4 w-full flex justify-center">
-          <ImagesInCategory
-            bannerId=""
-            height={100}
-            heightBanner="h-82"
-            widthBanner="md:max-w-[350px] w-full" // it must be compatible with ALLOWED_WIDTH
-            mutate={() => {}} // just send mutate
-            idx={0}
+          <ImageUploaderProduct
+            bannerHeight={100}
+            setSelectedImages={setSelectedImages}
+            selectedImages={selectedImages}
           />
         </div>
       </div>
