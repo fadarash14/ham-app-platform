@@ -32,7 +32,7 @@ const TableContent = ({ selectedOption }: IProps) => {
   const { data, isLoading } = useSWR(
     selectedOption?.value ? fetchUrl(selectedOption.value) : null,
     (url) =>
-      fetcherPost<IPostUserStatus, RootResponseNew<userSearchArr>>(url, {
+      fetcherPost<IPostUserStatus, RootResponseNew<IUserSearchArr>>(url, {
         arg: {
           userStatus: Number(selectedOption?.value),
         },

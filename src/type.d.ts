@@ -198,7 +198,7 @@ interface RootResponseNew<T> {
   page: Page;
 }
 
-interface userSearchArr {
+interface IUserSearchArr {
   userSearchResponseList: UserSearchResponseList[];
 }
 
@@ -245,4 +245,15 @@ interface IAddressUserNew {
   unit: string;
   latAndLong: string;
   detail: string;
+}
+
+interface ITagSearchResponse {
+  id: string
+  name: string
+  type: number
+  status: number
+}
+
+interface ITagSearchResponseList	 {
+  tagSearchResponseList	: ITagSearchResponse[];
 }

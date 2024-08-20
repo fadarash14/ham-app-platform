@@ -1,9 +1,11 @@
 import { TextareaField } from "@/components/login/TextareaField";
 import { TextField } from "@/components/login/TextField";
 import ListBoxSelect from "@/components/ui-kit/select-box/ListBoxSelect";
-import { useState } from "react";
 import MySwitch from "@/components/ui-kit/MySwitch";
 import ImageUploaderProduct from "./ImageUploaderProduct";
+import Badge from "@/components/ui-kit/Badge";
+import useSWR from "swr";
+import ListBoxSelectMultiple from "@/components/ui-kit/select-box/ListBoxSelectMultiple";
 
 type ProductState = {
   name: string;
@@ -20,35 +22,40 @@ type ProductState = {
 
 interface IProps {
   productState: ProductState;
-  setProductState: React.Dispatch<React.SetStateAction<ProductState>>;
   setSelectedImages: React.Dispatch<React.SetStateAction<File[]>>;
   selectedImages: File[];
+  handleChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  toggleDiscountType: () => void;
+  handleToggleActive: () => void;
+  discountType: number;
+  selectedCategory: SelectedOption | null;
+  setSelectedCategory: React.Dispatch<
+    React.SetStateAction<SelectedOption | null>
+  >;
+  selectedTags: SelectedOption[] | null;
+  setSelectedTags: React.Dispatch<
+    React.SetStateAction<SelectedOption[] | null>
+  >;
 }
 
 const AddProductComp = ({
   productState,
-  setProductState,
   setSelectedImages,
   selectedImages,
+  handleChange,
+  toggleDiscountType,
+  discountType,
+  handleToggleActive,
+  selectedCategory,
+  setSelectedCategory,
+  selectedTags,
+  setSelectedTags,
 }: IProps) => {
-  const [selectedCategory, setSelectedCategory] =
-    useState<SelectedOption | null>(null);
-  const [selectedTags, setSelectedTags] = useState<SelectedOption | null>(null);
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setProductState({
-      ...productState,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const handleToggleActive = () => {
-    setProductState((prevState) => ({
-      ...prevState,
-      isActive: !prevState.isActive,
-    }));
-  };
+  const { data: TagData, isLoading: TagIsLoading } = useSWR<
+    RootResponseNew<ITagSearchResponseList>
+  >(`/v1/admins/tag/search?page=0&size=100`);
 
   return (
     <div className="p-4 rounded flex flex-col md:flex-row justify-between w-full gap-10">
@@ -75,26 +82,36 @@ const AddProductComp = ({
             id="price"
           />
         </div>
+
         <div className="mb-4 w-full">
           <TextField
-            label="تخفیف (درصد)"
-            placeholder="تخفیف به صورت درصد"
-            state={productState.discountPercentage}
-            onChange={handleChange}
-            name="discountPercentage"
-            type="text"
-            id="discountPercentage"
-          />
-        </div>
-        <div className="mb-4 w-full">
-          <TextField
-            label="تخفیف (مبلغ ثابت - تومان)"
-            placeholder="تخفیف به صورت مبلغ ثابت"
+            label={
+              discountType === 0 ? "تخفیف (درصد)" : "تخفیف (مبلغ ثابت - تومان)"
+            }
+            placeholder={
+              discountType === 0 ? "تخفیف به صورت درصد" : "تخفیف به مبلغ ثابت"
+            }
             state={productState.discountAmount}
             onChange={handleChange}
             name="discountAmount"
             type="text"
             id="discountAmount"
+            icon={
+              <div className="flex gap-2 items-center transform translate-y-1.5 ">
+                <button onClick={toggleDiscountType}>
+                  <Badge
+                    color={discountType === 1 ? "gray" : "green"}
+                    text="درصد"
+                  />
+                </button>
+                <button onClick={toggleDiscountType}>
+                  <Badge
+                    color={discountType === 0 ? "gray" : "green"}
+                    text="مبلغ ثابت"
+                  />
+                </button>
+              </div>
+            }
           />
         </div>
         <div className="mb-4 w-full">
@@ -106,13 +123,32 @@ const AddProductComp = ({
           />
         </div>
         <div className="mb-4 w-full">
-          <ListBoxSelect
-            selected={selectedTags}
-            setSelected={setSelectedTags}
-            items={[{ label: "برچسب 1", value: "1" }]} // Replace with actual tag options
-            label="انتخاب برچسب‌ها"
-            // multiple
-          />
+          {TagIsLoading || !TagData ? (
+            // <ListBoxSelectMultiple
+            //   items={[]}
+            //   selected={selectedTags}
+            //   setSelected={setSelectedTags}
+            //   label="انتخاب برچسب‌ها"
+            // />
+            <></>
+          ) : (
+            <ListBoxSelectMultiple
+              items={
+                TagData?._embedded?.tagSearchResponseList.map((i) => ({
+                  label: i.name,
+                  value: i.id,
+                })) || []
+              }
+              // items={[
+              //   { label: "1 گروه محصول", value: "0" },
+              //   { label: "گروه محصول 2 ", value: "1" },
+              //   { label: "گروه محصول 3", value: "2" },
+              // ]}
+              selected={selectedTags}
+              setSelected={setSelectedTags}
+              label="انتخاب برچسب‌ها"
+            />
+          )}
         </div>
         <div className="mb-4 w-full">
           <TextareaField
