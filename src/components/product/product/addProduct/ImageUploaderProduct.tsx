@@ -10,7 +10,7 @@ const ImageUploaderProduct: React.FC<{
   selectedImages: File[];
 }> = ({ bannerHeight, setSelectedImages, selectedImages }) => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  console.log({ bannerHeight });
+  
 
   const validateAndSetImage = (file: File) => {
     // const categorySchema = createBannerSchema(bannerHeight, ALLOWED_WIDTH); //it must change the createCategorySchema

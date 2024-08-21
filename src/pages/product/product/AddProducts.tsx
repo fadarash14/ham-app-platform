@@ -3,6 +3,7 @@ import OutlineButton from "@/components/ui-kit/buttons/OutlineButton";
 import { PrimaryButtons } from "@/components/ui-kit/buttons/PrimaryButtons";
 import { LoadingSpinnerButton } from "@/components/ui-kit/LoadingSpinner";
 import useFetcherPost from "@/hooks/useFetcherPost";
+import router from "@/routes";
 import handleError from "@/validator/showError";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -12,14 +13,13 @@ const AddProducts = () => {
   const [productState, setProductState] = useState({
     name: "",
     price: "",
-    discountPercentage: "",
-    discountAmount: "",
+    discountPrice: "",
     length: "",
     width: "",
     height: "",
     weight: "",
     description: "",
-    isActive: false,
+    isActive: 0,
   }); //also handle tag id and category id
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const handleChange = (
@@ -32,25 +32,25 @@ const AddProducts = () => {
   };
 
   const handleToggleActive = () => {
-    setProductState((prevState) => ({
-      ...prevState,
-      isActive: !prevState.isActive,
-    }));
+    setProductState({
+      ...productState,
+      isActive: productState.isActive === 0 ? 1 : 0,
+    });
   };
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<SelectedOption | null>(null);
   const [discountType, setDiscountType] = useState(0);
   const [selectedTags, setSelectedTags] = useState<SelectedOption[] | null>([]);
-  const toggleDiscountType = () => {
+  const [selectedCategory, setSelectedCategory] =
+    useState<SelectedOption | null>(null);
+  const toggleDiscountType = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
     setDiscountType((prevState) => (prevState === 0 ? 1 : 0));
   };
   const tagIds = selectedTags?.map((tag) => tag.value).join(",");
-  const url = `/v1/admins/product?name=${productState.name}&description=${productState.description}&price=${productState.price}&
-  discountPrice=${productState.discountAmount}&discountType=${discountType}&length=${productState.length}&width=${productState.width}&
-  height=${productState.height}&weight=${productState.weight}&status=0&count=0&thresholdCount=0&
-  categoryId=9530ba1c-52fd-4e27-8835-504913f992e6&tagIds=${tagIds}`;
-
+  const url = `/v1/admins/product?name=${productState.name}&description=${productState.description}&price=${productState.price}&discountPrice=${productState.discountPrice}&discountType=${discountType}&length=${productState.length}&width=${productState.width}&height=${productState.height}&weight=${productState.weight}&status=${productState.isActive}&count=0&thresholdCount=0&categoryId=${selectedCategory?.value}&tagIds=${tagIds}`;
+  // const url =`/v1/admins/product?name=نام محصول&description=testetstestest&price=154874&discountPrice=20&discountType=0&length=100&width=100&height=100&weight=100&status=1&count=0&thresholdCount=0&categoryId=9530ba1c-52fd-4e27-8835-504913f992e6&tagIds=27243132-fcd8-4c49-a403-9f1669e3afc7`
   const fetcherPost = useFetcherPost({
     headers: { "Content-Type": "multipart/form-data" },
   });
@@ -70,6 +70,7 @@ const AddProducts = () => {
         const res = await trigger(formData);
         if (res.id) {
           toast.success("محصول با موفقیت اضافه شد");
+          router.navigate("/superuser/product");
         }
       }
     } catch (error) {
@@ -77,13 +78,20 @@ const AddProducts = () => {
     }
   };
 
+  const isDisableSubmit =
+    Object.values(productState).some((value) => value === "") ||
+    selectedImages.length === 0 ||
+    selectedTags?.length === 0 ||
+    selectedCategory === null;
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col gap-5">
         <div className="w-full flex gap-4 items-center justify-start">
           <h6 className="ml-auto text-xl">اضافه کردن محصول جدید</h6>
-          <OutlineButton>انصراف</OutlineButton>
-          <PrimaryButtons type="submit">
+          <OutlineButton onClick={() => router.navigate("/superuser/product")}>
+            انصراف
+          </OutlineButton>
+          <PrimaryButtons type="submit" disabled={isDisableSubmit}>
             {isMutating ? <LoadingSpinnerButton /> : "ذخیره"}
           </PrimaryButtons>
         </div>

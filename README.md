@@ -1,8 +1,6 @@
-
 # API Data Fetching Guide
 
 This guide provides examples of how to fetch data using the POST method in different scenarios.
-
 
 ## 1. Fetch Data with POST Method
 
@@ -11,18 +9,18 @@ To fetch data using the POST method, use the following code:
 ```typescript
 const fetcherPost = useFetcherPost();
 
-const fetchUrl = "http://78.109.199.178:8080/v1/admins/user/search?page=0&size=10";
+const fetchUrl =
+  "http://78.109.199.178:8080/v1/admins/user/search?page=0&size=10";
 
-const { data, isLoading } = useSWR(fetchUrl, {
+const { data, isLoading } = useSWR<responseType>(fetchUrl, {
   fetcher: () =>
-    fetcherPost<any, any>(fetchUrl, {
+    fetcherPost<requestBodyType, responseType>(fetchUrl, {
       arg: {
-        userStatus: 3,
+        userStatus: 3, //requestBody
       },
     }),
 });
 ```
-
 
 ## 2. GET Data with POST Method on Page Load
 
@@ -44,7 +42,6 @@ const { data, isLoading } = useSWR(
     })
 );
 ```
-
 
 ## 3. POST Data with POST Method
 

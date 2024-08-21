@@ -6,18 +6,18 @@ import ImageUploaderProduct from "./ImageUploaderProduct";
 import Badge from "@/components/ui-kit/Badge";
 import useSWR from "swr";
 import ListBoxSelectMultiple from "@/components/ui-kit/select-box/ListBoxSelectMultiple";
+import useFetcherPost from "@/hooks/useFetcherPost";
 
 type ProductState = {
   name: string;
   price: string;
-  discountPercentage: string;
-  discountAmount: string;
+  discountPrice: string;
   length: string;
   width: string;
   height: string;
   weight: string;
   description: string;
-  isActive: boolean;
+  isActive: number;
 };
 
 interface IProps {
@@ -27,7 +27,9 @@ interface IProps {
   handleChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
-  toggleDiscountType: () => void;
+  toggleDiscountType: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
   handleToggleActive: () => void;
   discountType: number;
   selectedCategory: SelectedOption | null;
@@ -56,6 +58,22 @@ const AddProductComp = ({
   const { data: TagData, isLoading: TagIsLoading } = useSWR<
     RootResponseNew<ITagSearchResponseList>
   >(`/v1/admins/tag/search?page=0&size=100`);
+
+  const fetcherPost = useFetcherPost();
+  const fetchUrl = "/v1/admins/category/search?page=0&size=100";
+
+  const { data: categoryData, isLoading: categoryIsLoading } = useSWR<
+    RootResponseNew<ICategorySearchResponseList>
+  >(fetchUrl, {
+    suspense: true,
+    fetcher: () =>
+      fetcherPost<object, RootResponseNew<ICategorySearchResponseList>>(
+        fetchUrl,
+        {
+          arg: {},
+        }
+      ),
+  });
 
   return (
     <div className="p-4 rounded flex flex-col md:flex-row justify-between w-full gap-10">
@@ -91,13 +109,13 @@ const AddProductComp = ({
             placeholder={
               discountType === 0 ? "تخفیف به صورت درصد" : "تخفیف به مبلغ ثابت"
             }
-            state={productState.discountAmount}
+            state={productState.discountPrice}
             onChange={handleChange}
-            name="discountAmount"
+            name="discountPrice"
             type="text"
-            id="discountAmount"
-            icon={
-              <div className="flex gap-2 items-center transform translate-y-1.5 ">
+            id="discountPrice"
+            comp={
+              <div className=" absolute  bottom-1.5 left-1.5 flex gap-2 items-center  ">
                 <button onClick={toggleDiscountType}>
                   <Badge
                     color={discountType === 1 ? "gray" : "green"}
@@ -115,22 +133,32 @@ const AddProductComp = ({
           />
         </div>
         <div className="mb-4 w-full">
-          <ListBoxSelect
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
-            items={[{ label: "دسته 1", value: "1" }]} // Replace with actual category options
-            label="انتخاب دسته‌بندی"
-          />
+          {categoryIsLoading || !categoryData ? (
+            <ListBoxSelect
+              label="انتخاب دسته‌بندی"
+              selected={selectedCategory}
+              setSelected={setSelectedCategory}
+              items={[]}
+            />
+          ) : (
+            <ListBoxSelect
+              selected={selectedCategory}
+              setSelected={setSelectedCategory}
+              items={categoryData?._embedded?.categorySearchResponseList.map(
+                (i) => ({ label: i.name, value: i.id })
+              )} // Replace with actual category options
+              label="انتخاب دسته‌بندی"
+            />
+          )}
         </div>
         <div className="mb-4 w-full">
           {TagIsLoading || !TagData ? (
-            // <ListBoxSelectMultiple
-            //   items={[]}
-            //   selected={selectedTags}
-            //   setSelected={setSelectedTags}
-            //   label="انتخاب برچسب‌ها"
-            // />
-            <></>
+            <ListBoxSelectMultiple
+              items={[]}
+              selected={selectedTags}
+              setSelected={setSelectedTags}
+              label="انتخاب برچسب‌ها"
+            />
           ) : (
             <ListBoxSelectMultiple
               items={
@@ -139,11 +167,6 @@ const AddProductComp = ({
                   value: i.id,
                 })) || []
               }
-              // items={[
-              //   { label: "1 گروه محصول", value: "0" },
-              //   { label: "گروه محصول 2 ", value: "1" },
-              //   { label: "گروه محصول 3", value: "2" },
-              // ]}
               selected={selectedTags}
               setSelected={setSelectedTags}
               label="انتخاب برچسب‌ها"
@@ -168,7 +191,7 @@ const AddProductComp = ({
         </OutlineButton> */}
         <div className="mb-4 w-full pr-2 py-4 mt-4   rounded-md border-0  block shadow-sm ring-1 ring-inset placeholder:text-gray-400 text-sm leading-6 pl-10 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-slate-300 ring-gray-300 dark:ring-gray-600 focus:ring-2 focus:ring-inset  focus:ring-indigo-400 dark:focus:ring-indigo-500">
           <MySwitch
-            checked={productState.isActive}
+            checked={productState.isActive === 1}
             onChange={handleToggleActive}
             label={productState.isActive ? "فعال" : "غیرفعال"}
             noSpace
