@@ -1,5 +1,4 @@
 import {
-  LoadingSpinnerPage,
   LoadingSpinnerTable,
 } from "@/components/ui-kit/LoadingSpinner";
 import Pagination from "@/components/ui-kit/Pagination";
