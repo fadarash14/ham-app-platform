@@ -21,7 +21,7 @@ interface IProps {
   disabled?: boolean;
 }
 
-export default function ListBoxSelect({
+export default function ListBoxSelectMultiple({
   items,
   selected,
   setSelected,

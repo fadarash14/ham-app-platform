@@ -1,7 +1,8 @@
+import ImageUploaderNoUploading from "@/components/ui-kit/ImageUploaderNoUploading";
 import React, { useState } from "react";
 // import { createBannerSchema } from "@/validator/uploadBannerImage";
 // import { toast } from "react-toastify";
-import ImageUploaderNoUploading from "@/components/ui-kit/ImageUploaderNoUploading";
+
 // const ALLOWED_WIDTH = 350; //it must be compatible with widthBanner
 
 const ImageUploaderProduct: React.FC<{
@@ -10,8 +11,8 @@ const ImageUploaderProduct: React.FC<{
   selectedImages: File[];
 }> = ({ bannerHeight, setSelectedImages, selectedImages }) => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  
 
+  console.log({ bannerHeight });
   const validateAndSetImage = (file: File) => {
     // const categorySchema = createBannerSchema(bannerHeight, ALLOWED_WIDTH); //it must change the createCategorySchema
     const previewUrl = URL.createObjectURL(file);

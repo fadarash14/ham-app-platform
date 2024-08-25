@@ -198,7 +198,7 @@ interface RootResponseNew<T> {
   page: Page;
 }
 
-interface IUserSearchArr {
+interface userSearchArr {
   userSearchResponseList: UserSearchResponseList[];
 }
 
@@ -258,6 +258,10 @@ interface ITagSearchResponseList {
   tagSearchResponseList: ITagSearchResponse[];
 }
 
+interface CategorySearchResponseList {
+  categorySearchResponseList: ICategorySearchResponse[];
+}
+
 interface ICategorySearchResponse {
   id: string;
   name: string;
@@ -266,6 +270,32 @@ interface ICategorySearchResponse {
   tags: string[];
 }
 
-interface ICategorySearchResponseList {
-  categorySearchResponseList: ICategorySearchResponse[];
+interface ProductSearchResponseList {
+  productSearchResponseList: ProductSearchResponse[];
+}
+
+interface ProductSearchResponse {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  discountPrice: number;
+  discountType: number;
+  length: number;
+  width: number;
+  height: number;
+  weight: number;
+  status: number;
+  count: number;
+  thresholdCount: number;
+  categories: {
+    id: string;
+    name: string;
+  }[];
+  images: string[];
+  tags: {
+    id: string;
+    name: string;
+  }[];
+  additional: unknown[];
 }

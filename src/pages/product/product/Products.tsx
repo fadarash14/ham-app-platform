@@ -9,10 +9,9 @@ import router from "@/routes";
 const PAGE_SIZE = 10;
 
 const Products = () => {
-  // const handleRoute = () => router.navigate("add");
-  const handleRoute = () => {};
+  const handleRoute = () => router.navigate("add");
+  // const handleRoute = () => {};
 
- 
   return (
     <>
       <div className="w-full flex justify-end">
@@ -59,7 +58,7 @@ export default Products;
 const categories = [
   {
     name: "همه",
-    Component: <AllProducts  />,
+    Component: <AllProducts pageSize={PAGE_SIZE} />,
   },
   {
     name: "فعال",

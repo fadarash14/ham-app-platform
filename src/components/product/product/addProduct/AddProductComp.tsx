@@ -65,7 +65,7 @@ const AddProductComp = ({
   const { data: categoryData, isLoading: categoryIsLoading } = useSWR<
     RootResponseNew<ICategorySearchResponseList>
   >(fetchUrl, {
-    suspense: true,
+    // suspense: true,
     fetcher: () =>
       fetcherPost<object, RootResponseNew<ICategorySearchResponseList>>(
         fetchUrl,

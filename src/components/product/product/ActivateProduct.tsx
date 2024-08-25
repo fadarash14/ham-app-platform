@@ -1,6 +1,4 @@
-import {
-  LoadingSpinnerTable,
-} from "@/components/ui-kit/LoadingSpinner";
+import { LoadingSpinnerTable } from "@/components/ui-kit/LoadingSpinner";
 import Pagination from "@/components/ui-kit/Pagination";
 import useFetcherPost from "@/hooks/useFetcherPost";
 import { useState } from "react";
@@ -8,20 +6,22 @@ import useSWR from "swr";
 const ActivateProduct = ({ pageSize }: { pageSize: number }) => {
   const [page, setPage] = useState(1);
   const fetcherPost = useFetcherPost();
-  const fetchUrl = `/v1/admins/product/search?page=${page-1}&size=${pageSize}&forceFirstAndLastRels=true`;
+  const fetchUrl = `/v1/admins/product/search?page=${
+    page - 1
+  }&size=${pageSize}&forceFirstAndLastRels=true`;
 
   const { data: productData, isLoading: productIsLoading } = useSWR<
-    RootResponseNew<ICategorySearchResponseList>
+    RootResponseNew<ProductSearchResponseList>
   >(fetchUrl, {
     fetcher: () =>
       fetcherPost<
-        { id: string; name: string; status: number },
-        RootResponseNew<ICategorySearchResponseList>
+        { id: string | null; name: string | null; status: number | null },
+        RootResponseNew<ProductSearchResponseList>
       >(fetchUrl, {
         arg: {
-          name: "",
-          status: 1, //1 for active
-          id: "",
+          name: null,
+          status: null, //1 for active
+          id: null,
         },
       }),
   });
