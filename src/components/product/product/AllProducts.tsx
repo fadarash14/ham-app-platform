@@ -10,7 +10,7 @@ const AllProducts = ({ pageSize }: { pageSize: number }) => {
   const fetcherPost = useFetcherPost();
   const fetchUrl = `/v1/admins/product/search?page=${
     page - 1
-  }&size=${pageSize}&forceFirstAndLastRels=true`;
+  }&size=${pageSize}&forceFirstAndLastRels=true&status=null`;
 
   const { data: productData, isLoading: productIsLoading } = useSWR<
     RootResponseNew<ProductSearchResponseList>
@@ -29,8 +29,7 @@ const AllProducts = ({ pageSize }: { pageSize: number }) => {
   });
 
   const products = useMemo(
-    () =>
-      productData?._embedded?.productSearchResponseList || [],
+    () => productData?._embedded?.productSearchResponseList || [],
     [productData]
   );
 
@@ -39,9 +38,7 @@ const AllProducts = ({ pageSize }: { pageSize: number }) => {
 
   return (
     <>
-      <ProductsListStructure
-        res={products}
-      />
+      <ProductsListStructure res={products} />
       <Pagination
         currentPage={page}
         onPageChange={(value) => setPage(value)}

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
 import Badge from "@/components/ui-kit/Badge";
 import CheckBoxNew from "@/components/ui-kit/CheckBoxNew";
-import useGetImage from "@/hooks/useGetImage";
+import ImageShow from "@/components/ui-kit/images/ImageShow";
+// import useGetImage from "@/hooks/useGetImage";
 
 interface ProductsListStructureProps {
   res: ProductSearchResponse[];
@@ -10,13 +10,6 @@ interface ProductsListStructureProps {
 const ProductsListStructure: React.FC<ProductsListStructureProps> = ({
   res,
 }) => {
-  console.log({ res });
-  const { pic, getPicture } = useGetImage();
-
-  useEffect(() => {
-    getPicture(res[0].images[0]);
-  }, [getPicture, res]);
-
   return (
     <table className="w-full">
       <thead>
@@ -27,7 +20,6 @@ const ProductsListStructure: React.FC<ProductsListStructureProps> = ({
           <th className="p-2 text-start"></th>
           <th className="p-2 text-start w-1/2">نام محصول</th>
           <th className="p-2 text-center">وضعیت</th>
-          <th className="p-2 text-center">تعداد گوناگونی</th>
           <th className="p-2 text-center">برچسب ها</th>
         </tr>
       </thead>
@@ -38,12 +30,13 @@ const ProductsListStructure: React.FC<ProductsListStructureProps> = ({
               <CheckBoxNew />
             </td>
             <td className="p-2 text-start">
-              {/* //create acomponenet to show image */}
-              <img
-                src={pic}
-                alt="product"
-                className="w-10 h-10 mr-2 rounded-full"
-              />
+              {product.images[0] ? (
+                <div className="w-10 h-10 mr-2 rounded-full overflow-hidden ">
+                  <ImageShow alt="product" imageAddress={product.images[0]} />
+                </div>
+              ) : (
+                <div className="w-10 h-10 mr-2 rounded-full border border-slate-300 dark:border-slate-600" />
+              )}
             </td>
             <td className="p-2 text-start w-1/3">
               <span>{product.name}</span>
@@ -54,11 +47,14 @@ const ProductsListStructure: React.FC<ProductsListStructureProps> = ({
                 text={product.status === 1 ? "فعال" : "غیر فعال"}
               />
             </td>
-            <td className="p-2 text-center">?</td>
             <td className="p-2 text-center flex gap-2 justify-center">
-              {product.tags.map((tags) => {
-                return <Badge key={tags.id} color="gray" text={tags.name} />;
-              })}
+              {product.tags.length > 0
+                ? product.tags.map((tags) => {
+                    return (
+                      <Badge key={tags.id} color="gray" text={tags.name} />
+                    );
+                  })
+                : "-"}
             </td>
           </tr>
         ))}

@@ -267,7 +267,7 @@ interface ICategorySearchResponse {
   name: string;
   description: string;
   images: string[];
-  tags: string[];
+  tags: { id: string; name: string }[];
 }
 
 interface ProductSearchResponseList {

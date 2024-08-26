@@ -6,7 +6,7 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Plus from "@/assets/icons/plus.svg?react";
 import router from "@/routes";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 3;
 
 const Products = () => {
   const handleRoute = () => router.navigate("add");
@@ -40,7 +40,7 @@ const Products = () => {
               {categories.map(({ name, Component }) => (
                 <TabPanel
                   key={name}
-                  className="rounded-xl p-3 border border-slate-300 dark:border-slate-600 "
+                  className="rounded-xl p-3 border border-slate-300 dark:border-slate-600 overflow-auto"
                 >
                   {Component}
                 </TabPanel>
@@ -66,6 +66,6 @@ const categories = [
   },
   {
     name: "غیر فعال",
-    Component: <DeactivateProduct />,
+    Component: <DeactivateProduct pageSize={PAGE_SIZE} />,
   },
 ];

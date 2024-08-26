@@ -75,6 +75,7 @@ const AddProducts = () => {
         }
       }
     } catch (error) {
+      console.log({error})
       handleError(error);
     }
   };
