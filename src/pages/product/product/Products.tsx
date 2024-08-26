@@ -5,13 +5,17 @@ import { PrimaryButtons } from "@/components/ui-kit/buttons/PrimaryButtons";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import Plus from "@/assets/icons/plus.svg?react";
 import router from "@/routes";
+import { useSearchParams } from "react-router-dom";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 10;
 
 const Products = () => {
+  const [tab, setTab] = useSearchParams(undefined);
+  const tabVal = Number(tab.get("tab")) || 0;
+  const handleChange = (index: number) => {
+    setTab({ tab: index.toString() });
+  };
   const handleRoute = () => router.navigate("add");
-  // const handleRoute = () => {};
-
   return (
     <>
       <div className="w-full flex justify-end">
@@ -23,7 +27,7 @@ const Products = () => {
       </div>
       <div className="p-4 rounded flex flex-col md:flex-row justify-between shadow-md bg-slate-50 dark:bg-slate-700  text-slate-700 dark:text-slate-300">
         <div className="w-full">
-          <TabGroup>
+          <TabGroup selectedIndex={tabVal} onChange={handleChange}>
             <TabList className="flex gap-4">
               {categories.map(({ name }) => (
                 <Tab

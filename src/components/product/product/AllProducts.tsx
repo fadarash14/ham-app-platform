@@ -35,7 +35,7 @@ const AllProducts = ({ pageSize }: { pageSize: number }) => {
 
   if (productIsLoading) return <LoadingSpinnerTable />;
   if (products.length === 0) return <h1>هیچ محصولی وجود ندارد</h1>;
-
+console.log(productData?.page.totalElements)
   return (
     <>
       <ProductsListStructure res={products} />
@@ -43,7 +43,7 @@ const AllProducts = ({ pageSize }: { pageSize: number }) => {
         currentPage={page}
         onPageChange={(value) => setPage(value)}
         pageSize={pageSize}
-        totalCount={productData?.page.totalPages || 0}
+        totalCount={productData?.page.totalElements || 0}
       />
     </>
   );

@@ -44,7 +44,7 @@ const AllProducts = ({ pageSize }: { pageSize: number }) => {
         currentPage={page}
         onPageChange={(value) => setPage(value)}
         pageSize={pageSize}
-        totalCount={productData?.page.totalPages || 0}
+        totalCount={productData?.page.totalElements || 0}
       />
     </>
   );

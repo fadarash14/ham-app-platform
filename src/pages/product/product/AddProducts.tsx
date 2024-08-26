@@ -75,7 +75,6 @@ const AddProducts = () => {
         }
       }
     } catch (error) {
-      console.log({error})
       handleError(error);
     }
   };
@@ -90,7 +89,10 @@ const AddProducts = () => {
       <div className="flex flex-col gap-5">
         <div className="w-full flex gap-4 items-center justify-start">
           <h6 className="ml-auto text-xl">اضافه کردن محصول جدید</h6>
-          <OutlineButton type="reset" onClick={() => router.navigate("/superuser/product")}>
+          <OutlineButton
+            type="reset"
+            onClick={() => router.navigate("/superuser/product")}
+          >
             انصراف
           </OutlineButton>
           <PrimaryButtons type="submit" disabled={isDisableSubmit}>

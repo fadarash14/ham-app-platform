@@ -18,10 +18,10 @@ const Categories = () => {
   }&size=${PAGE_SIZE}`;
 
   const { data, isLoading } = useSWR<
-    RootResponseNew<CategorySearchResponseList>
+    RootResponseNew<ICategorySearchResponseList>
   >(fetchUrl, {
     fetcher: () =>
-      fetcherPost<object, RootResponseNew<CategorySearchResponseList>>(
+      fetcherPost<object, RootResponseNew<ICategorySearchResponseList>>(
         fetchUrl,
         {
           arg: {},

@@ -6,6 +6,7 @@ const useGetImage = (pictureURL: string) => {
   const fetcher = async (url: string) => {
     const response = await axiosPrivate.get(url, {
       responseType: "arraybuffer",
+      headers: { Accept: "image/*", "Content-Type": "application/json" },
     });
     return URL.createObjectURL(new Blob([response.data]));
   };
@@ -21,6 +22,7 @@ const useGetImage = (pictureURL: string) => {
     },
     revalidateOnFocus: false,
     onErrorRetry(_error, _key, _config, _revalidate, { retryCount }) {
+      console.log({ retryCount });
       if (retryCount > 2) return;
     },
   });

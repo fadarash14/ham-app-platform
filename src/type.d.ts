@@ -258,7 +258,7 @@ interface ITagSearchResponseList {
   tagSearchResponseList: ITagSearchResponse[];
 }
 
-interface CategorySearchResponseList {
+interface ICategorySearchResponseList {
   categorySearchResponseList: ICategorySearchResponse[];
 }
 
